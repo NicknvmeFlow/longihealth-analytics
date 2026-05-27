@@ -3,64 +3,69 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PatientController extends Controller
 {
-    private function loadData()
+    private function getData()
     {
-        $path = storage_path('app/data/cleaned_diabetes_data.csv');
-        if (!file_exists($path)) {
-            return collect();
-        }
+        $path = storage_path('app/data/dataset_cleaned.csv');
+        if (!file_exists($path)) return collect();
 
-        $csv = array_map('str_getcsv', file($path));
-        $header = array_shift($csv);
-
+        $file = fopen($path, 'r');
+        
+        // Читаем заголовки и удаляем BOM
+        $rawHeaders = fgetcsv($file);
+        $headers = array_map(function($h) {
+            // Удаляем BOM (символ \xEF\xBB\xBF или \u{FEFF})
+            $h = preg_replace('/^\xEF\xBB\xBF/', '', $h);
+            $h = trim($h);
+            return $h;
+        }, $rawHeaders);
+        
         $data = [];
-        foreach ($csv as $row) {
-            $data[] = array_combine($header, $row);
+        while (($row = fgetcsv($file)) !== false) {
+            if (count($row) == count($headers)) {
+                $data[] = array_combine($headers, $row);
+            }
         }
-
+        fclose($file);
         return collect($data);
     }
 
     public function index()
     {
-        $allPatients = $this->loadData();
-
-        // Группируем по пациентам (берём уникальные по Age + Gender + BMI для примера)
-        $patients = $allPatients->groupBy(function($item) {
-            return $item['Age'] . '-' . $item['Gender'] . '-' . $item['BMI'];
-        })->map(function($group) {
+        $all = $this->getData();
+        
+        $patients = $all->groupBy('patient_id')->map(function($records) {
+            $first = $records->first();
             return [
-                'id' => $group->first()['Age'] . rand(100,999),
-                'name' => 'Пациент ' . $group->first()['Age'] . ' лет',
-                'birth_date' => ($group->first()['Age'] > 50 ? '19' : '20') . rand(50,99) . '.0' . rand(1,9) . '.' . rand(10,28),
-                'gender' => $group->first()['Gender'],
-                'patient_id' => substr(md5($group->first()['Age']), 0, 16),
-                'diagnosis' => $group->first()['Diagnosis'] ?? 0,
-                'records_count' => $group->count()
+                'id'            => $first['patient_id'] ?? '?',
+                'name'          => $first['фио'] ?? 'Без имени',
+                'gender'        => $first['пол'] ?? '?',
+                'birth_date'    => $first['дата_рождения'] ?? '?',
+                'records_count' => $records->count(),
+                'last_date'     => $records->max('дата_пробы') ?? '—'
             ];
-        })->values()->take(15); // Ограничиваем для скорости
+        })->values();
 
         return view('patients.index', compact('patients'));
     }
 
     public function show($id)
     {
-        $allData = $this->loadData();
-        
-        // Берём все записи для примера (в реальности нужно фильтровать по пациенту)
-        $patientRecords = $allData->take(12); 
-
-        $patient = [
-            'name' => 'Иванова Елена Владимировна',
-            'birth_date' => '21.04.1950',
-            'gender' => 'Женский',
-            'patient_id' => 'iv19850421'
-        ];
-
-        return view('patients.show', compact('patient', 'patientRecords'));
+    $all = $this->getData();
+    $records = $all->where('patient_id', $id);
+    
+    if ($records->isEmpty()) abort(404);
+    
+    $first = $records->first();
+    $patient = [
+        'name'       => $first['фио'],
+        'birth_date' => $first['дата_рождения'] ?? '?',
+        'gender'     => $first['пол'],
+        'patient_id' => $id
+    ];
+    
+    return view('patients.show', compact('patient', 'records')); // передаём records
     }
 }
