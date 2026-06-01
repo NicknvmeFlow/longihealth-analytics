@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit', '512M'); // Увеличил лимит памяти
 
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;

@@ -8,27 +8,45 @@ class PatientController extends Controller
 {
     private function getData()
     {
-        $path = storage_path('app/data/dataset_cleaned.csv');
+        // Проверяем, загружал ли пользователь свой файл
+        $uploadedPath = storage_path('app/temp/uploaded_data.csv');
+        $defaultPath  = storage_path('app/data/dataset_cleaned.csv');
+        
+        $path = file_exists($uploadedPath) ? $uploadedPath : $defaultPath;
+        
         if (!file_exists($path)) return collect();
 
         $file = fopen($path, 'r');
-        
+
+        // Автоопределение разделителя
+        $firstLine = fgets($file);
+        $delimiters = [',', ';', "\t"];
+        $delimiter = ',';
+        $maxFields = 0;
+        foreach ($delimiters as $d) {
+            $fields = str_getcsv($firstLine, $d);
+            if (count($fields) > $maxFields) {
+                $maxFields = count($fields);
+                $delimiter = $d;
+            }
+        }
+        rewind($file);
+
         // Читаем заголовки и удаляем BOM
-        $rawHeaders = fgetcsv($file);
+        $rawHeaders = fgetcsv($file, 0, $delimiter);
         $headers = array_map(function($h) {
-            // Удаляем BOM (символ \xEF\xBB\xBF или \u{FEFF})
             $h = preg_replace('/^\xEF\xBB\xBF/', '', $h);
-            $h = trim($h);
-            return $h;
+            return trim($h);
         }, $rawHeaders);
         
         $data = [];
-        while (($row = fgetcsv($file)) !== false) {
+        while (($row = fgetcsv($file, 0, $delimiter)) !== false) {
             if (count($row) == count($headers)) {
                 $data[] = array_combine($headers, $row);
             }
         }
         fclose($file);
+        
         return collect($data);
     }
 
@@ -53,19 +71,19 @@ class PatientController extends Controller
 
     public function show($id)
     {
-    $all = $this->getData();
-    $records = $all->where('patient_id', $id);
-    
-    if ($records->isEmpty()) abort(404);
-    
-    $first = $records->first();
-    $patient = [
-        'name'       => $first['фио'],
-        'birth_date' => $first['дата_рождения'] ?? '?',
-        'gender'     => $first['пол'],
-        'patient_id' => $id
-    ];
-    
-    return view('patients.show', compact('patient', 'records')); // передаём records
+        $all = $this->getData();
+        $records = $all->where('patient_id', $id);
+        
+        if ($records->isEmpty()) abort(404, 'Данные для пациента не найдены');
+        
+        $first = $records->first();
+        $patient = [
+            'name'       => $first['фио'],
+            'birth_date' => $first['дата_рождения'] ?? '?',
+            'gender'     => $first['пол'],
+            'patient_id' => $id
+        ];
+        
+        return view('patients.show', compact('patient', 'records'));
     }
 }

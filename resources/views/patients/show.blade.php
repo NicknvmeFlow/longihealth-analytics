@@ -87,6 +87,29 @@
                     </div>
                     <small class="text-muted">Норма: HGB {{ $hgbNorm[0] }}-{{ $hgbNorm[1] }} г/л, WBC 4.0-9.0, PLT 150-400</small>
                 </div>
+
+                <!-- Графики -->
+                <div class="d-flex align-items-center gap-2 mb-3 mt-4 flex-wrap">
+                    <label class="form-label mb-0 fw-semibold small">Показатель:</label>
+                    <select class="form-select form-select-sm w-auto" id="select_blood">
+                        <option value="wbc" selected>WBC (Лейкоциты)</option>
+                        <option value="rbc">RBC (Эритроциты)</option>
+                        <option value="hgb">HGB (Гемоглобин)</option>
+                        <option value="hct">HCT (Гематокрит)</option>
+                        <option value="plt">PLT (Тромбоциты)</option>
+                        <option value="neu%">NEU%</option>
+                        <option value="lym%">LYM%</option>
+                        <option value="mono%">MONO%</option>
+                        <option value="eos%">EOS%</option>
+                    </select>
+                    <label class="form-label mb-0 fw-semibold small ms-2">Норма:</label>
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_min_blood" placeholder="От">
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_max_blood" placeholder="До">
+                </div>
+                <div class="card p-2 chart-card">
+                    <canvas id="chart_blood" height="120"></canvas>
+                </div>
+
             @else
                 <p class="text-muted">Нет данных общего анализа крови.</p>
             @endif
@@ -144,12 +167,28 @@
                     </div>
                     <small class="text-muted">Норма: глюкоза 3.9-5.5 ммоль/л, креатинин <120 мкмоль/л, холестерин <5.2 ммоль/л</small>
                 </div>
-
-                <!-- График глюкозы -->
-                <div class="mt-4">
-                    <h5>Динамика глюкозы</h5>
-                    <canvas id="glucoseChart" height="80"></canvas>
+                
+                <!-- Графики -->
+                <div class="d-flex align-items-center gap-2 mb-3 mt-4 flex-wrap">
+                    <label class="form-label mb-0 fw-semibold small">Показатель:</label>
+                    <select class="form-select form-select-sm w-auto" id="select_biochem">
+                        <option value="glu_глюкоза" selected>Глюкоза</option>
+                        <option value="cre_креатинин">Креатинин</option>
+                        <option value="chol_холестерин">Холестерин</option>
+                        <option value="urea_мочевина">Мочевина</option>
+                        <option value="alt_алт">АЛТ</option>
+                        <option value="ast_аст">АСТ</option>
+                        <option value="tbil_билируб.об">Билирубин</option>
+                        <option value="tg_триглицериды">Триглицериды</option>
+                    </select>
+                    <label class="form-label mb-0 fw-semibold small ms-2">Норма:</label>
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_min_biochem" placeholder="От">
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_max_biochem" placeholder="До">
                 </div>
+                <div class="card p-2 chart-card">
+                    <canvas id="chart_biochem" height="120"></canvas>
+                </div>
+
             @else
                 <p class="text-muted">Нет данных биохимических анализов.</p>
             @endif
@@ -193,6 +232,25 @@
                     </div>
                     <small class="text-muted">Норма МНО: 0.8–1.2</small>
                 </div>
+
+                <!-- Графики -->
+                <div class="d-flex align-items-center gap-2 mb-3 mt-4 flex-wrap">
+                    <label class="form-label mb-0 fw-semibold small">Показатель:</label>
+                    <select class="form-select form-select-sm w-auto" id="select_coag">
+                        <option value="пв,_сек">ПВ (сек)</option>
+                        <option value="мно" selected>МНО</option>
+                        <option value="фибриноген">Фибриноген</option>
+                        <option value="ачтв">АЧТВ</option>
+                        <option value="пти">ПТИ</option>
+                    </select>
+                    <label class="form-label mb-0 fw-semibold small ms-2">Норма:</label>
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_min_coag" placeholder="От">
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_max_coag" placeholder="До">
+                </div>
+                <div class="card p-2 chart-card">
+                    <canvas id="chart_coag" height="120"></canvas>
+                </div>
+            
             @else
                 <p class="text-muted">Нет данных коагулограммы.</p>
             @endif
@@ -233,6 +291,22 @@
                     </div>
                     <small class="text-muted">Норма ТТГ: 0.4–4.0 мкМЕ/мл</small>
                 </div>
+
+                <!-- Графики -->
+                <div class="d-flex align-items-center gap-2 mb-3 mt-4 flex-wrap">
+                    <label class="form-label mb-0 fw-semibold small">Показатель:</label>
+                    <select class="form-select form-select-sm w-auto" id="select_hormone">
+                        <option value="ттг" selected>ТТГ</option>
+                        <option value="т4_св.">Т4 свободный</option>
+                    </select>
+                    <label class="form-label mb-0 fw-semibold small ms-2">Норма:</label>
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_min_hormone" placeholder="От">
+                    <input type="number" step="any" class="form-control form-control-sm w-auto" id="norm_max_hormone" placeholder="До">
+                </div>
+                <div class="card p-2 chart-card">
+                    <canvas id="chart_hormone" height="120"></canvas>
+                </div>
+
             @else
                 <p class="text-muted">Нет данных гормональных анализов.</p>
             @endif
@@ -240,26 +314,204 @@
     </div>
 </div>
 
+@endsection
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Данные для графика глюкозы
-    const glucoseData = @json($records->filter(function($rec) {
-        return !empty($rec['дата_пробы']) && !empty($rec['glu_глюкоза']) && is_numeric($rec['glu_глюкоза']);
-    })->map(function($rec) {
-        return ['date' => $rec['дата_пробы'], 'glu' => (float)$rec['glu_глюкоза']];
-    })->values());
+document.addEventListener('DOMContentLoaded', () => {
+    const rawData = Object.values(@json($records)) || [];
+    const activeCharts = {};
+    
+    // Пол пациента
+    const patientGender = (@json($patient['gender']) || '').toUpperCase();
+    
+    // Динамическая норма гемоглобина в зависимости от пола
+    const hgbNorm = (patientGender.includes('М') || patientGender.includes('M')) 
+        ? [130, 170] // Мужчины
+        : [120, 150]; // Женщины
 
-    if (glucoseData.length > 0) {
-        const labels = glucoseData.map(item => item.date);
-        const values = glucoseData.map(item => item.glu);
-        new Chart(document.getElementById('glucoseChart'), {
-            type: 'line',
-            data: { labels: labels, datasets: [{ label: 'Глюкоза (ммоль/л)', data: values, borderColor: '#dc3545', tension: 0.3 }] },
-            options: { responsive: true }
-        });
-    } else {
-        const chartCanvas = document.getElementById('glucoseChart');
-        if (chartCanvas) chartCanvas.outerHTML = '<p class="text-muted">Нет данных для графика глюкозы</p>';
+    // Настройки параметров
+    const PARAMS = {
+        wbc: { label: 'WBC', color: '#3b82f6', norm: [4.0, 9.0] },
+        hgb: { label: 'HGB', color: '#ef4444', norm: hgbNorm }, // динамическая
+        plt: { label: 'PLT', color: '#10b981', norm: [150, 400] },
+        'glu_глюкоза': { label: 'Глюкоза', color: '#f59e0b', norm: [3.9, 5.5] },
+        'cre_креатинин': { label: 'Креатинин', color: '#8b5cf6', norm: [null, 120] },
+        'chol_холестерин': { label: 'Холестерин', color: '#ec4899', norm: [null, 5.2] },
+        мно: { label: 'МНО', color: '#64748b', norm: [0.8, 1.2] },
+        ттг: { label: 'ТТГ', color: '#84cc16', norm: [0.4, 4.0] },
+        rbc: { label: 'RBC', color: '#f97316', norm: null },
+        hct: { label: 'HCT', color: '#06b6d4', norm: null },
+        'neu%': { label: 'NEU%', color: '#8b5cf6', norm: null },
+        'lym%': { label: 'LYM%', color: '#ec4899', norm: null },
+        'mono%': { label: 'MONO%', color: '#f43f5e', norm: null },
+        'eos%': { label: 'EOS%', color: '#0ea5e9', norm: null },
+        'alt_алт': { label: 'АЛТ', color: '#06b6d4', norm: null },
+        'ast_аст': { label: 'АСТ', color: '#8b5cf6', norm: null },
+        'urea_мочевина': { label: 'Мочевина', color: '#14b8a6', norm: null },
+        'tbil_билируб.об': { label: 'Билирубин', color: '#f97316', norm: null },
+        'tg_триглицериды': { label: 'Триглицериды', color: '#a855f7', norm: null },
+        пти: { label: 'ПТИ', color: '#84cc16', norm: null },
+        'пв,_сек': { label: 'ПВ', color: '#0ea5e9', norm: null },
+        фибриноген: { label: 'Фибриноген', color: '#a855f7', norm: null },
+        ачтв: { label: 'АЧТВ', color: '#64748b', norm: null },
+        'т4_св.': { label: 'Т4 св.', color: '#e11d48', norm: null }
+    };
+
+    function getThemeColors() {
+        const style = getComputedStyle(document.documentElement);
+        return {
+            grid: style.getPropertyValue('--chart-grid').trim() || '#e0e0e0',
+            text: style.getPropertyValue('--chart-text').trim() || '#333333'
+        };
     }
+
+    // Цвета зоны нормы 
+    function getNormColors() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        return {
+            fill: isDark ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.18)',
+            border: isDark ? 'rgba(16, 185, 129, 0.85)' : 'rgba(16, 185, 129, 0.7)'
+        };
+    }
+
+    function renderTabChart(tabKey, paramKey) {
+        const canvasId = `chart_${tabKey}`;
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const config = PARAMS[paramKey];
+        if (!config) return;
+
+        const filtered = rawData.filter(r => r[paramKey] !== undefined && r[paramKey] !== '' && !isNaN(parseFloat(r[paramKey])));
+        const card = canvas.parentElement;
+        let msgEl = card.querySelector('.chart-empty-msg');
+        
+        if (filtered.length === 0) {
+            if (!msgEl) {
+                msgEl = document.createElement('p');
+                msgEl.className = 'text-muted text-center small p-3 chart-empty-msg';
+                msgEl.textContent = 'Нет данных для выбранного показателя';
+                card.appendChild(msgEl);
+            }
+            canvas.style.display = 'none';
+            msgEl.style.display = 'block';
+            if (activeCharts[tabKey]) { activeCharts[tabKey].destroy(); delete activeCharts[tabKey]; }
+            return;
+        }
+        canvas.style.display = 'block';
+        if (msgEl) msgEl.style.display = 'none';
+
+        const labels = filtered.map((r, i) => {
+            const d = r['дата_пробы'];
+            return (d && d.trim() !== '') ? d : `Проба ${i+1}`;
+        });
+        const values = filtered.map(r => parseFloat(r[paramKey]));
+
+        const maxVal = Math.max(...values);
+        const minVal = Math.min(...values);
+        const range = maxVal - minVal || 1;
+        const padding = range * 0.2;
+        const yMin = Math.max(0, minVal - padding);
+        const yMax = maxVal + padding;
+
+        const minInput = document.getElementById(`norm_min_${tabKey}`);
+        const maxInput = document.getElementById(`norm_max_${tabKey}`);
+        let normMin = config.norm ? config.norm[0] : null;
+        let normMax = config.norm ? config.norm[1] : null;
+        if (minInput && minInput.value.trim() !== '') normMin = parseFloat(minInput.value);
+        if (maxInput && maxInput.value.trim() !== '') normMax = parseFloat(maxInput.value);
+
+        const colors = getThemeColors();
+        const normColors = getNormColors();
+        const datasets = [];
+
+        // 🟩 Зона нормы
+        if (normMin !== null || normMax !== null) {
+            const drawMax = normMax !== null ? Math.min(normMax, yMax) : yMax;
+            const drawMin = normMin !== null ? Math.max(normMin, yMin) : yMin;
+            
+            datasets.push({
+                label: `Норма: ${normMin !== null ? normMin : '—'}–${normMax !== null ? normMax : '∞'}`,
+                data: labels.map(() => drawMax),
+                borderColor: normColors.border,
+                borderDash: [5, 5],
+                pointRadius: 0,
+                order: 2
+            });
+            datasets.push({
+                label: '',
+                data: labels.map(() => drawMin),
+                borderColor: normColors.border,
+                borderDash: [5, 5],
+                backgroundColor: normColors.fill,
+                fill: '-1',
+                pointRadius: 0,
+                order: 2
+            });
+        }
+
+        datasets.push({
+            label: config.label,
+            data: values,
+            borderColor: config.color,
+            backgroundColor: config.color + '30',
+            tension: 0.3,
+            pointRadius: 4,
+            borderWidth: 2,
+            order: 1
+        });
+
+        if (activeCharts[tabKey]) activeCharts[tabKey].destroy();
+
+        activeCharts[tabKey] = new Chart(canvas.getContext('2d'), {
+            type: 'line',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: colors.text, filter: item => item.text !== '' && item.text !== undefined } } },
+                scales: {
+                    x: { ticks: { color: colors.text, maxTicksLimit: 8 }, grid: { color: colors.grid } },
+                    y: { ticks: { color: colors.text }, grid: { color: colors.grid }, min: yMin, max: yMax }
+                }
+            }
+        });
+    }
+
+    const TABS = { blood: 'blood', biochem: 'biochem', coag: 'coag', hormone: 'hormone' };
+    Object.keys(TABS).forEach(tabKey => {
+        const selectEl = document.getElementById(`select_${tabKey}`);
+        const minIn = document.getElementById(`norm_min_${tabKey}`);
+        const maxIn = document.getElementById(`norm_max_${tabKey}`);
+
+        if (selectEl) {
+            renderTabChart(tabKey, selectEl.value);
+            selectEl.addEventListener('change', (e) => renderTabChart(tabKey, e.target.value));
+        }
+        if (minIn) minIn.addEventListener('input', () => renderTabChart(tabKey, selectEl?.value));
+        if (maxIn) maxIn.addEventListener('input', () => renderTabChart(tabKey, selectEl?.value));
+    });
+
+    window.updateChartsTheme = function() {
+        const colors = getThemeColors();
+        const normColors = getNormColors();
+        
+        Object.values(activeCharts).forEach(chart => {
+            if (!chart) return;
+            chart.options.scales.x.ticks.color = colors.text;
+            chart.options.scales.x.grid.color = colors.grid;
+            chart.options.scales.y.ticks.color = colors.text;
+            chart.options.scales.y.grid.color = colors.grid;
+            chart.options.plugins.legend.labels.color = colors.text;
+            
+            const normDatasets = chart.data.datasets.filter(d => d.borderDash);
+            normDatasets.forEach(d => {
+                d.borderColor = normColors.border;
+                if (d.backgroundColor) d.backgroundColor = normColors.fill;
+            });
+            chart.update();
+        });
+    };
+});
 </script>
-@endsection

@@ -1,3 +1,149 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* СВЕТЛАЯ ТЕМА (стандартная) */
+:root {
+    --bg-body: #f8f9fa;       /* Фон всей страницы */
+    --bg-card: #ffffff;       /* Фон карточек и таблиц */
+    --bg-navbar: #9f1e2e;     /* Цвет верхней панели */ 
+    --text-body: #212529;     /* Основной текст */
+    --text-muted: #6c757d;    /* Второстепенный текст */
+    --border-color: #dee2e6;  /* Цвет рамок */
+    --chart-grid: #e0e0e0;    /* Сетка графиков */
+    --chart-text: #333333;    /* Текст графиков */
+}
+
+/* ТЁМНАЯ ТЕМА */
+[data-theme="dark"] {
+    --bg-body: #121212;         /* Фон всей страницы */
+    --bg-card: #1e1e1e;         /* Фон карточек и таблиц */
+    --bg-navbar: #7a1825;       /* Цвет верхней панели (не работает) */
+    --text-body: #e0e0e0;       /* Основной текст */
+    --text-muted: #777777;      /* Второстепенный текст */
+    --border-color: #333333;    /* Цвет рамок */
+    --chart-grid: #444444;      /* Сетка графиков */
+    --chart-text: #cccccc;      /* Текст графиков */
+}
+
+/* Общий фон и текст страницы */
+body {
+    background-color: var(--bg-body);
+    color: var(--text-body);
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавная смена */
+}
+
+/* Карточки и обёртки */
+.card, .card-body, .table-responsive {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-body) !important;
+}
+.card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+[data-theme="dark"] .card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Таблицы */
+.table {
+    color: var(--text-body) !important;
+    border-color: var(--border-color) !important;
+}
+.table thead th {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body) !important;
+    border-color: var(--border-color) !important;
+    font-weight: 600;
+}
+.table tbody tr,
+.table tbody td {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body) !important;
+    border-color: var(--border-color) !important;
+    vertical-align: middle;
+}
+.table > :not(caption) > * > * {
+    background-color: var(--bg-card) !important;
+}
+
+/* Поля ввода (поиск) */
+.form-control {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body) !important;
+    border-color: var(--border-color) !important;
+}
+.form-control::placeholder {
+    color: var(--text-muted) !important;
+}
+.form-control:focus {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body) !important;
+    border-color: #86b7fe !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+}
+
+/* Блок оценки */
+.alert-light {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body) !important;
+    border-color: var(--border-color) !important;
+}
+.alert-light h6,
+.alert-light small,
+.alert-light .d-flex,
+.alert-light .badge {
+    color: var(--text-body) !important;
+}
+
+/* Вкладки */
+.nav-tabs {
+    border-bottom-color: var(--border-color) !important;
+}
+.nav-tabs .nav-link {
+    color: var(--text-muted) !important;
+    border-color: transparent !important;
+}
+.nav-tabs .nav-link:hover {
+    color: var(--text-body) !important;
+    border-color: transparent !important;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body) !important;
+    border-color: var(--border-color) !important;
+    border-bottom-color: transparent !important;
+}
+
+
+/* Контрастный (белый) на зелёном (оценка)*/
+.alert-light .bg-success {
+    color: #ffffff !important;
+}
+
+/* Контрастный (чёрный) на жёлтом/красном (оценка)*/
+.alert-light .bg-warning,
+.alert-light .bg-danger {
+    color: #000000 !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Адаптация элементов управления под тему */
+.form-select, .form-control {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body) !important;
+    border-color: var(--border-color) !important;
+}
+.form-select option {
+    background-color: var(--bg-card);
+    color: var(--text-body);
+}
+/* Отступ под графиком (чтобы не прилипал к низу, а то выглядит не оч) */
+.chart-card {
+    margin-bottom: 2rem;
+}
